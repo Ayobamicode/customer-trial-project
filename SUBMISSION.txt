@@ -1,0 +1,24 @@
+INEW 2332 — Sample Trial Project
+
+GitHub repository:
+https://github.com/Ayobamicode/customer-trial-project
+
+Implementation: Angular frontend + FastAPI REST API + PostgreSQL CUSTOMER table.
+Uses the Python implementation option described in the course AI Prompt lesson.
+
+Screenshots:
+01-angular-source.png — Angular component, model, and HTTP service integration.
+02-fastapi-source.png — REST endpoints and parameterized SQL operations.
+03-postgresql-schema.png — CUSTOMER table DDL and constraints.
+04-postgresql-data.png — Actual PostgreSQL schema and sample-row query output.
+05-api-responses.png — Actual HTTP 200 health and customer-list responses.
+06-integration-tests.png — Passing CRUD, validation, and database health tests.
+
+Validation: Angular production build succeeded; 3 integration tests passed
+against real PostgreSQL 18.4. Live HTTP endpoints returned successful results.
+
+Verification limitation: Automated browser preview was blocked by an unavailable
+browser security-policy check. Screenshots show source code and actual recorded
+API/database/test output, not a visually verified running browser interface.
+
+See README.md for setup and run instructions. All sample customer data is fictional.

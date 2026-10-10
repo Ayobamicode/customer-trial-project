@@ -1,0 +1,27 @@
+POSTGRESQL DATA LAYER — LIVE QUERY RESULTS
+Server version: 18.4
+Database: customerdb | Table: public.customer
+
+CUSTOMER TABLE STRUCTURE
+customer_id      integer                   nullable: NO
+name             character varying(100)    nullable: NO
+address_line1    character varying(150)    nullable: NO
+address_line2    character varying(150)    nullable: NO
+city             character varying(80)     nullable: NO
+state            character varying(2)      nullable: NO
+zip              character varying(10)     nullable: NO
+
+SELECT * FROM customer ORDER BY customer_id;
+
+#1  Alex Morgan
+    1200 Example Avenue, Suite 200
+    Houston, TX 77002
+
+#2  Jordan Rivera
+    450 Sample Street
+    Austin, TX 78701
+
+#3  Taylor Chen
+    88 Demo Lane, Apt 3B
+    Dallas, TX 75201
+
