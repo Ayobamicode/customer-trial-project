@@ -1,50 +1,42 @@
+SPRING BOOT REST API — LIVE HTTP RESPONSES
+
 GET /api/health
 HTTP 200
 {
   "status": "ok",
   "database": "PostgreSQL",
-  "version": "PostgreSQL 18.4 on x86_64-apple-darwin24.6.0, compiled by Apple clang version 17.0.0 (clang-1700.6.3.2), 64-bit"
+  "framework": "Spring Boot",
+  "version": "18.4"
 }
 
 GET /api/customers
 HTTP 200
 [
   {
+    "customer_id": 1,
     "name": "Alex Morgan",
     "address_line1": "1200 Example Avenue",
     "address_line2": "Suite 200",
     "city": "Houston",
     "state": "TX",
-    "zip": "77002",
-    "customer_id": 1
+    "zip": "77002"
   },
   {
+    "customer_id": 2,
     "name": "Jordan Rivera",
     "address_line1": "450 Sample Street",
     "address_line2": "",
     "city": "Austin",
     "state": "TX",
-    "zip": "78701",
-    "customer_id": 2
+    "zip": "78701"
   },
   {
+    "customer_id": 3,
     "name": "Taylor Chen",
     "address_line1": "88 Demo Lane",
     "address_line2": "Apt 3B",
     "city": "Dallas",
     "state": "TX",
-    "zip": "75201",
-    "customer_id": 3
+    "zip": "75201"
   }
 ]
-
-GET /openapi.json
-HTTP 200
-{
-  "title": "Customer CRUD API",
-  "paths": [
-    "/api/health",
-    "/api/customers",
-    "/api/customers/{customer_id}"
-  ]
-}

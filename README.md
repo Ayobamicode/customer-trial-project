@@ -1,35 +1,34 @@
-# Customer Trial Project
+# Customer Trial Project — Spring Boot
 
-INEW 2332 — Sample Trial Project. A working three-layer customer CRUD application using the Python option in the course's **AI Prompt** lesson.
+**INEW 2332 Sample Trial Project** • Angular + Java Spring Boot + PostgreSQL
 
-**Repository:** https://github.com/Ayobamicode/customer-trial-project
+Repository: https://github.com/Ayobamicode/customer-trial-project
 
-## Architecture
+A three-layer customer CRUD application implementing the **Java option** in the course AI Prompt lesson. All sample names and addresses are fictional.
+
+## Layers
+
+| Layer | Implementation | Files |
+|---|---|---|
+| Presentation | Angular 22, forms, search, create/edit/delete feedback | `frontend/src/` |
+| REST API | Java 21, Spring Boot 3.5.16, Spring MVC, Bean Validation, Spring JDBC | `backend/src/main/java/edu/hcc/customer/` |
+| Data | PostgreSQL 18, a single CUSTOMER table | `database/schema.sql`, `database/seed.sql` |
 
 ```text
-Angular interface (127.0.0.1:4200)
-        │ HTTP /api via development proxy
-        ▼
-FastAPI REST service (127.0.0.1:8000)
-        │ psycopg + parameterized SQL
-        ▼
-PostgreSQL (127.0.0.1:55432 / customerdb)
-        └── CUSTOMER table
+Angular :4200 → HTTP /api development proxy → Spring Boot :8000
+                                                  ↓ Spring JDBC
+                                      PostgreSQL :55432 / customerdb
 ```
 
-- **Presentation:** `frontend/src/` — standalone Angular component, customer list, search, validated create/edit form, delete confirmation, and request feedback.
-- **Middle layer:** `backend/main.py` — REST routes, Pydantic validation, HTTP status handling, and parameterized SQL. `backend/db.py` manages database connections.
-- **Data layer:** `database/schema.sql` and `database/seed.sql` — one CUSTOMER table with generated ID, name, address line 1, address line 2, city, state, and ZIP.
+`CustomerController` defines REST routes. `CustomerInput` validates and normalizes input. `CustomerRepository` executes prepared SQL with named parameters. `ApiExceptionHandler` returns readable validation and error responses. JSON uses snake_case so the Angular model matches the database columns.
 
-All seeded names and addresses are fictional demonstration data.
+## Prerequisites
 
-## Requirements
+- **Java JDK 21** (make sure `java -version` and `JAVA_HOME` select this JDK).
+- **Node.js and npm**. The root npm install includes a project-local Node 24.15 runtime compatible with Angular 22.
+- Internet access on first install for npm and Maven dependencies.
 
-- Node.js 24.15+ (or a compatible Angular 22 runtime) and npm.
-- Python 3.11+.
-- PostgreSQL: use the supplied local npm runner, or an existing PostgreSQL server.
-
-The root install supplies a project-local Node 24.15 runtime so the included npm scripts also work when the system Node is slightly older. PostgreSQL runs locally with generated credentials stored only in ignored `.runtime/` files. No global database installation is required.
+The included Maven wrapper downloads Maven 3.9.11; a global Maven installation is unnecessary. The npm database runner starts real PostgreSQL locally, with no Docker requirement.
 
 ## Install
 
@@ -38,87 +37,86 @@ From the project root:
 ```sh
 npm ci
 npm ci --prefix frontend
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r backend/requirements-lock.txt
 ```
 
-On Windows, activate with `.venv\Scripts\activate` and use `python` instead of `python3` when appropriate. The embedded database package supports common macOS, Windows, and Linux architectures; alternatively use your own PostgreSQL instance.
+## Run (three terminals)
 
-## Run: three terminals
-
-**Terminal 1 — PostgreSQL:**
+**1. Database — project root:**
 
 ```sh
 npm run database
 ```
 
-Wait for “PostgreSQL ready”. Keep this terminal running; Ctrl+C shuts down cleanly and preserves data.
+Wait for “PostgreSQL ready.” This creates the schema and seeds the table only when empty. It generates a local password in ignored `.runtime/` files and writes Spring's local connection configuration. Keep the terminal running. Ctrl+C shuts PostgreSQL down cleanly; records persist on disk. Restarting an intentionally emptied table inserts the three demo rows again.
 
-**Terminal 2 — API (from the root, with the virtual environment active):**
+**2. Spring Boot — backend folder:**
 
 ```sh
-python -m backend.init_db
-python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+cd backend
+./mvnw spring-boot:run
 ```
 
-Initialization creates the table if absent and inserts sample data only when the table is empty. Do not rerun initialization when you intentionally want an empty table.
+On Windows use `mvnw.cmd spring-boot:run`. Spring loads `../.runtime/application-local.properties`. No Python environment or Python server is required.
 
-**Terminal 3 — Angular:**
+**3. Angular — project root:**
 
 ```sh
 npm run frontend
 ```
 
-Open **http://127.0.0.1:4200**. API documentation is at **http://127.0.0.1:8000/docs**.
+Open **http://127.0.0.1:4200**. API reference: **http://127.0.0.1:8000/docs/index.html**. Health: **http://127.0.0.1:8000/api/health**.
 
-### Existing PostgreSQL instead
+## Use an existing PostgreSQL server
 
-Create an empty database, set `DATABASE_URL` in the API terminal to its PostgreSQL connection URI, and run the initialization and API commands above. When set, `DATABASE_URL` takes precedence over the local runner's ignored connection file. Do not commit database credentials.
+Create an empty database, run `database/schema.sql` and `database/seed.sql` with psql or your database client, then set the Spring environment variables before launching the API:
 
-## API
+- `SPRING_DATASOURCE_URL` — JDBC URL, e.g. `jdbc:postgresql://127.0.0.1:5432/customerdb`
+- `SPRING_DATASOURCE_USERNAME` — your database user
+- `SPRING_DATASOURCE_PASSWORD` — your database password
 
-| Method | Endpoint | Behavior |
+These standard Spring environment properties override the local connection file. Do not commit credentials. The optional `npm run inspect-db` helper is for the included local PostgreSQL runner.
+
+## REST API
+
+| Method | Path | Result |
 |---|---|---|
-| GET | `/api/health` | Verify real PostgreSQL connectivity |
-| GET | `/api/customers` | List customers |
-| GET | `/api/customers/{id}` | Read one customer; 404 if absent |
-| POST | `/api/customers` | Create; return 201 and Location header |
-| PUT | `/api/customers/{id}` | Update; return 200 or 404 |
-| DELETE | `/api/customers/{id}` | Delete; return 204 or 404 |
+| GET | `/api/health` | 200, Spring Boot and real PostgreSQL version |
+| GET | `/api/customers` | 200, all customers |
+| GET | `/api/customers/{id}` | 200 or 404 |
+| POST | `/api/customers` | 201, saved customer and Location header |
+| PUT | `/api/customers/{id}` | 200 or 404 |
+| DELETE | `/api/customers/{id}` | 204 or 404 |
 
-Example request body:
+POST/PUT body:
 
 ```json
 {"name":"Alex Morgan","address_line1":"1200 Example Avenue","address_line2":"Suite 200","city":"Houston","state":"TX","zip":"77002"}
 ```
 
-Empty required fields, overlong values, malformed state codes, and invalid ZIP codes are rejected. ZIP is text so leading zeroes are preserved. State is a two-letter code; ZIP accepts five digits or ZIP+4. The API returns 422 for validation errors and 503 if PostgreSQL is unavailable.
+Required strings are trimmed and cannot be blank. State is normalized to two uppercase letters. ZIP is text (preserving leading zeros), accepting five digits or ZIP+4. Address line 2 is optional. Invalid input returns **400** with a `detail` message. Missing records return **404**; lost database connectivity returns **503**.
 
-## Verification
+## Test and package
 
-Keep PostgreSQL running, activate the Python environment, and run:
+Keep PostgreSQL running. In `backend`:
 
 ```sh
-python -m pytest backend/test_api.py -v
-python -m scripts.inspect_database
-npm run build
+./mvnw clean verify
 ```
 
-Integration tests use the actual configured PostgreSQL database. They create a temporary test record, read it, update it, verify the saved value using SQL, delete it, check 404 behavior, and reject invalid inputs. They preserve the sample records.
+`CustomerApiTest` launches Spring Boot on a random port and sends real HTTP requests backed by PostgreSQL. It tests CRUD, persistence with a separate SQL query, missing records, invalid input, state normalization, leading-zero ZIP preservation, and database health. It removes its temporary customer and preserves the sample rows.
 
-## Screenshots
+The packaged executable is `backend/target/customer-api-1.0.0.jar`. From the root:
 
-The `screenshots/` folder contains evidence for the interface, REST API, and PostgreSQL layers. See `SUBMISSION.txt` for the GitHub URL and screenshot index.
+```sh
+java -jar backend/target/customer-api-1.0.0.jar
+npm run build
+npm run inspect-db
+```
+
+## Evidence
+
+The `screenshots/` directory and `SUBMISSION.txt` document the final Spring Boot implementation and validation. `backend/test-results.txt` records JUnit results; `backend/verification.txt` and `database/verification.txt` contain real API and database output.
 
 ## Scope
 
-This is a local instructional model. It has no authentication and is bound to loopback for demonstration. A production deployment would require authentication, authorization, migrations, HTTPS, and a production server configuration.
-
-### Recorded validation limits
-
-The production Angular build and three PostgreSQL integration tests passed on
-October 9, 2026. Live HTTP health, customer-list, and OpenAPI requests returned 200.
-Automated browser preview was blocked by an unavailable browser security-policy
-check, so the included screenshots show source code and real recorded API/database
-test output. Browser interaction and visual layout have not been verified.
+A local instructional model, bound to loopback, without authentication. Production deployment requires authentication, authorization, HTTPS, migrations, and appropriate hosting configuration.

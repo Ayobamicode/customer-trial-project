@@ -1,0 +1,13 @@
+Browser verification — October 11, 2026
+Angular interface -> Spring Boot REST API -> PostgreSQL
+
+PASS: Initial page loads three seeded customers.
+PASS: Create Browser Test Customer; success message and fourth row appear.
+PASS: Edit name to Browser Test Updated; saved value appears in the table.
+PASS: Search filters to the matching customer (1 of 4 records).
+PASS: Delete confirmation names the correct record.
+PASS: Confirm deletion; success message and 3 total records remain.
+PASS: Clear search and reload; original three sample customers are displayed.
+PASS: Spring Boot API reference is served at /docs/index.html.
+
+The temporary browser test record was deleted after verification.

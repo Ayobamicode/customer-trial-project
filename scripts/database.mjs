@@ -27,10 +27,17 @@ const found = await admin.query(
 );
 if (!found.rowCount) await pg.createDatabase("customerdb");
 await admin.end();
+const database = pg.getPgClient('customerdb', '127.0.0.1');
+await database.connect();
+await database.query(readFileSync('database/schema.sql', 'utf8'));
+await database.query(readFileSync('database/seed.sql', 'utf8'));
+await database.end();
+writeFileSync(resolve(dir, 'application-local.properties'),
+  `spring.datasource.password=${config.password}\n`, { mode: 0o600 });
 const url = `postgresql://customer_app:${config.password}@127.0.0.1:55432/customerdb`;
 writeFileSync(resolve(dir, "database-url"), url, { mode: 0o600 });
 console.log(
-  "PostgreSQL ready on 127.0.0.1:55432 (customerdb). Run the initialization script next.",
+  "PostgreSQL ready on 127.0.0.1:55432 (customerdb). Schema and sample data initialized. Start Spring Boot next.",
 );
 let stopping = false;
 async function stop() {

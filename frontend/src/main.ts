@@ -54,6 +54,7 @@ class App {
     this.load();
   }
   load() {
+    this.error.set("");
     this.loading.set(true);
     this.http.get<Customer[]>("/api/customers").subscribe({
       next: (rows) => {

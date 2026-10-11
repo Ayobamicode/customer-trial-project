@@ -6,7 +6,8 @@
   "scripts": {
     "database": "node scripts/database.mjs",
     "frontend": "cd frontend && node ../frontend/node_modules/@angular/cli/bin/ng.js serve --host 127.0.0.1 --proxy-config proxy.conf.json",
-    "build": "cd frontend && node ../frontend/node_modules/@angular/cli/bin/ng.js build"
+    "build": "cd frontend && node ../frontend/node_modules/@angular/cli/bin/ng.js build",
+    "inspect-db": "node scripts/inspect-database.mjs"
   },
   "dependencies": {
     "embedded-postgres": "18.4.0-beta.17"

@@ -1,24 +1,25 @@
 INEW 2332 — Sample Trial Project
 
-GitHub repository:
-https://github.com/Ayobamicode/customer-trial-project
+GitHub: https://github.com/Ayobamicode/customer-trial-project
 
-Implementation: Angular frontend + FastAPI REST API + PostgreSQL CUSTOMER table.
-Uses the Python implementation option described in the course AI Prompt lesson.
+JAVA IMPLEMENTATION
+Presentation: Angular 22
+Middle layer: Java 21, Spring Boot 3.5.16, Spring MVC, Spring JDBC
+Database: PostgreSQL 18.4, one CUSTOMER table
 
 Screenshots:
-01-angular-source.png — Angular component, model, and HTTP service integration.
-02-fastapi-source.png — REST endpoints and parameterized SQL operations.
+01-angular-interface.jpg — Running Angular customer directory using Spring Boot.
+02-spring-boot-source.png — Java REST controller implementation.
 03-postgresql-schema.png — CUSTOMER table DDL and constraints.
-04-postgresql-data.png — Actual PostgreSQL schema and sample-row query output.
-05-api-responses.png — Actual HTTP 200 health and customer-list responses.
-06-integration-tests.png — Passing CRUD, validation, and database health tests.
+04-postgresql-data.png — Real PostgreSQL schema and sample customer query output.
+05-spring-boot-responses.png — Real HTTP health and customer-list responses.
+06-spring-boot-tests.png — Passing JUnit/PostgreSQL integration tests.
+07-spring-boot-api-reference.jpg — API reference served by Spring Boot.
 
-Validation: Angular production build succeeded; 3 integration tests passed
-against real PostgreSQL 18.4. Live HTTP endpoints returned successful results.
+Validation:
+- Maven clean verify: BUILD SUCCESS; 3 tests, 0 failures, 0 errors.
+- Angular production build: passed.
+- Browser: create, edit, search, delete, and reload verified through Angular.
+- Temporary test records removed; three fictional sample customers preserved.
 
-Verification limitation: Automated browser preview was blocked by an unavailable
-browser security-policy check. Screenshots show source code and actual recorded
-API/database/test output, not a visually verified running browser interface.
-
-See README.md for setup and run instructions. All sample customer data is fictional.
+See README.md for installation, launch commands, architecture, and REST endpoints.
